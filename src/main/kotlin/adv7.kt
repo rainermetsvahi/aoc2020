@@ -1,9 +1,5 @@
 import java.io.File
 
-fun main(args: Array<String>) {
-    adv7(args[0])
-}
-
 fun adv7(filename: String) {
     println("ADV7: Reading $filename")
 
