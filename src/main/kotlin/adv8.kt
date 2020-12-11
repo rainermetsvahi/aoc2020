@@ -58,7 +58,7 @@ fun adv8(filename: String) {
 
     for (i in 0..lines.size) {
         val instructions = mutableListOf<Instruction>()
-        lines.forEach { l -> instructions.add(l.cloneNew()) }
+        lines.forEach { l -> instructions.add(Instruction(l.command, l.value, false)) }
         repair(i, instructions)
         val result = execute(instructions)
         if (result.third == lines.size) {
@@ -71,9 +71,5 @@ fun adv8(filename: String) {
 class Instruction(var command: String, val value: Int, var visited: Boolean) {
     override fun toString(): String {
         return "$command, $value $visited"
-    }
-
-    fun cloneNew(): Instruction {
-        return Instruction(command, value, false)
     }
 }
