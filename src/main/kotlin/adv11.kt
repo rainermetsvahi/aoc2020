@@ -7,9 +7,9 @@ const val occupiedSeat = '#'
 var columns = 0
 var rows = 0
 
-enum class Direction {
-    N, E, W, S, NE, NW, SE, SW
-}
+    enum class SeatDirection {
+        N, E, W, S, NE, NW, SE, SW
+    }
 
 fun getMapKey(row: Int, col: Int): String {
     return "${row}_${col}"
@@ -20,46 +20,46 @@ fun getCoordinates(mapKey: String): Pair<Int, Int> {
     return Pair(parts[0].toInt(), parts[1].toInt())
 }
 
-fun getAdjacentSeat(seat: String, map: Map<String, Char>, direction: Direction): Pair<String, Char>? {
+fun getAdjacentSeat(seat: String, map: Map<String, Char>, direction: SeatDirection): Pair<String, Char>? {
     val (row, col) = getCoordinates(seat)
     var adjacentKey: String? = null
     when (direction) {
-        Direction.N -> {
+        SeatDirection.N -> {
             if (row - 1 >= 0) { // up
                 adjacentKey = getMapKey(row - 1, col)
             }
         }
-        Direction.S -> {
+        SeatDirection.S -> {
             if (row + 1 < rows) { // down
                 adjacentKey  = getMapKey(row + 1, col)
             }
         }
-        Direction.W -> {
+        SeatDirection.W -> {
             if (col - 1 >= 0) { // left
                 adjacentKey = getMapKey(row, col - 1)
             }
         }
-        Direction.E -> {
+        SeatDirection.E -> {
             if (col + 1 < columns) { // right
                 adjacentKey = getMapKey(row, col + 1)
             }
         }
-        Direction.NW -> {
+        SeatDirection.NW -> {
             if (row - 1 >= 0 && col - 1 >= 0) { // upper-left
                 adjacentKey = getMapKey(row - 1, col - 1)
             }
         }
-        Direction.NE -> {
+        SeatDirection.NE -> {
             if (row - 1 >= 0 && col + 1 < columns) { // upper-right
                 adjacentKey = getMapKey(row - 1, col + 1)
             }
         }
-        Direction.SW -> {
+        SeatDirection.SW -> {
             if (row + 1 < rows && col - 1 >= 0) { // lower-left
                 adjacentKey = getMapKey(row + 1, col - 1)
             }
         }
-        Direction.SE -> {
+        SeatDirection.SE -> {
             if (row + 1 < rows && col + 1 < columns) { // lower-right
                 adjacentKey = getMapKey(row + 1, col + 1)
             }
@@ -68,7 +68,7 @@ fun getAdjacentSeat(seat: String, map: Map<String, Char>, direction: Direction):
     return adjacentKey?.let { Pair(it, map[it]!!) }
 }
 
-fun getVisibleSeat(seat: String, map: Map<String, Char>, direction: Direction): Pair<String, Char>? {
+fun getVisibleSeat(seat: String, map: Map<String, Char>, direction: SeatDirection): Pair<String, Char>? {
     val adjacent = getAdjacentSeat(seat, map, direction)
     if (adjacent != null) {
         if (map[adjacent.first]!! == floorSeat) {
@@ -81,7 +81,7 @@ fun getVisibleSeat(seat: String, map: Map<String, Char>, direction: Direction): 
 
 fun getAdjacentSeats(seat: String, map: Map<String, Char>): Map<String, Char> {
     val adjacent = mutableMapOf<String, Char>()
-    for (direction in Direction.values()) {
+    for (direction in SeatDirection.values()) {
         getAdjacentSeat(seat, map, direction)?.let { adjacent[it.first] = it.second }
     }
     return adjacent
@@ -89,7 +89,7 @@ fun getAdjacentSeats(seat: String, map: Map<String, Char>): Map<String, Char> {
 
 fun getVisibleSeats(seat: String, map: Map<String, Char>): Map<String, Char> {
     val visible = mutableMapOf<String, Char>()
-    for (direction in Direction.values()) {
+    for (direction in SeatDirection.values()) {
         getVisibleSeat(seat, map, direction)?.let { visible[it.first] = it.second }
     }
     //println("Visible seats for $seat: $visible")
