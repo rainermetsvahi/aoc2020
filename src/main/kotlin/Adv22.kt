@@ -48,20 +48,6 @@ class Adv22(fileName: String) {
         println("P2 cards: $cards2")
     }
 
-    fun alreadyPlayed(states: List<Pair<List<Int>, List<Int>>>,
-                      cards1: List<Int>, cards2: List<Int>): Boolean {
-        var contains = false
-        for (item in states) {
-            if (item.first.toTypedArray() contentEquals cards1.toTypedArray()
-                    && item.second.toTypedArray() contentEquals cards2.toTypedArray()) {
-                println("${item.first} and ${item.second} already played")
-                contains = true
-                break
-            }
-        }
-        return contains
-    }
-
     fun playRecursive(player1Deck: List<Int>, player2Deck: List<Int>,
                       previousStates: List<Pair<List<Int>, List<Int>>>): Pair<List<Int>, List<Int>> {
         println("play($player1Deck, $player2Deck, $previousStates)")
@@ -69,12 +55,12 @@ class Adv22(fileName: String) {
         val cards1 = player1Deck.toMutableList()
         val cards2 = player2Deck.toMutableList()
         while (cards1.isNotEmpty() && cards2.isNotEmpty()) {
-            if (alreadyPlayed(played, cards1, cards2)) {
+            if (played.contains(Pair(cards1, cards2))) {
                 println("State $cards1, $cards2 already played, $cards1 wins")
                 //println("\t prev states $played")
                 return Pair(cards1, emptyList())
             }
-            played.add(Pair(cards1.toList(), cards2.toList()))
+            played.add(Pair(cards1, cards2.toList()))
             //println("Added state $cards1, $cards2, new states = $played")
             val card1 = cards1.removeFirst()
             val card2 = cards2.removeFirst()
